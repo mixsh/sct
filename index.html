@@ -1,0 +1,244 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Space Colony</title>
+
+    <meta charset="utf-8">
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/font-awesome.min.css">
+  </head>
+  <body>
+    <div class="container">
+      <nav class="navbar" role="navigation" id="top-menu">
+        <div class="col-md-12">
+          <div class="navbar-header">
+            <a class="navbar-brand">Space Colony</a>
+          </div>
+
+          <div class="collapse navbar-collapse">
+            <ul class="nav navbar-nav navbar-left">
+              <li><a href="#" class="btn-start-game">Start New Game</a></li>
+              <li><a href="#">Credits / Licensing</a></li>
+              <!-- http://www.freesound.org/people/fins/sounds/146717/ -->
+              <!-- http://www.freesound.org/people/GameAudio/sounds/220166/ -->
+              <!-- http://www.freesound.org/people/fins/sounds/133278/ -->
+              <!-- https://www.freesound.org/people/fins/sounds/146718/ -->
+
+              <!-- http://commons.wikimedia.org/wiki/File:Milkyway_Swan_Panorama.jpg -->
+              <!-- http://en.wikipedia.org/wiki/File:HD_69830_Planet.jpg -->
+            </ul>
+            <div class="nav navbar-nav navbar-right">
+              <span data-bind="visible: shiftPressed() && !altPressed()">
+                x10
+              </span>
+              <span data-bind="visible: shiftPressed() && altPressed()">
+                x100
+              </span>
+            </div>
+          </div>
+        </div>
+      </nav>
+
+      <div class="row">
+        <div class="col-md-5">
+          <h2>Turn Management</h2>
+
+          <table class="table table-striped table-bordered control-buttons-panel unselectable">
+            <tr>
+              <td>
+                <i class="fa fa-cutlery"></i>
+              </td>
+              <td>
+                Rations
+              </td>
+              <td>
+                <span data-bind="text: currentTurnResources.rations()"></span>
+              </td>
+              <td>
+                <button class="btn btn-info btn-sm btn-add-resource"
+                        data-type="rations" data-bind="attr: { disabled: cantAddMore('rations') }">
+                        +<span data-bind="text: resourcePriceMod.rations()"></span>
+                </button>
+                <button class="btn btn-info btn-sm btn-remove-resource"
+                        data-type="rations" data-bind="attr: { disabled: cantRemoveMore('rations') }">
+                        -<span data-bind="text: resourcePriceMod.rations()"></span>
+                </button>
+              </td>
+            </tr>
+
+            <tr>
+              <td>
+                <i class="fa fa-bolt"></i>
+              </td>
+              <td>
+                Energy
+              </td>
+              <td>
+                <span data-bind="text: currentTurnResources.energy()"></span>
+              </td>
+              <td>
+                <button class="btn btn-info btn-sm btn-add-resource"
+                        data-type="energy" data-bind="attr: { disabled: cantAddMore('energy') }">
+                        +<span data-bind="text: resourcePriceMod.energy()"></span>
+                </button>
+                <button class="btn btn-info btn-sm btn-remove-resource"
+                        data-type="energy" data-bind="attr: { disabled: cantRemoveMore('energy') }">
+                        -<span data-bind="text: resourcePriceMod.energy()"></span>
+                </button>
+              </td>
+            </tr>
+
+            <tr>
+              <td>
+                <i class="fa fa-smile-o"></i>
+              </td>
+              <td>
+                Soma
+              </td>
+              <td>
+                <span data-bind="text: currentTurnResources.soma()"></span>
+              </td>
+              <td>
+                <button class="btn btn-info btn-sm btn-add-resource"
+                        data-type="soma" data-bind="attr: { disabled: cantAddMore('soma') }">
+                        +<span data-bind="text: resourcePriceMod.soma()"></span>
+                </button>
+                <button class="btn btn-info btn-sm btn-remove-resource"
+                        data-type="soma" data-bind="attr: { disabled: cantRemoveMore('soma') }">
+                        -<span data-bind="text: resourcePriceMod.soma()"></span>
+                </button>
+              </td>
+            </tr>
+
+            <tr>
+              <td>
+                <i class="fa fa-truck"></i>
+              </td>
+              <td>
+                Harvesters
+              </td>
+              <td>
+                <span data-bind="text: currentTurnResources.harvesters()"></span>
+              </td>
+              <td>
+                <button class="btn btn-info btn-sm btn-add-resource"
+                        data-type="harvesters" data-bind="attr: { disabled: cantAddMore('harvesters') }">
+                        +<span data-bind="text: resourcePriceMod.harvesters()"></span>
+                </button>
+                <button class="btn btn-info btn-sm btn-remove-resource"
+                        data-type="harvesters" data-bind="attr: { disabled: cantRemoveMore('harvesters') }">
+                        -<span data-bind="text: resourcePriceMod.harvesters()"></span>
+                </button>
+              </td>
+            </tr>
+
+            <tr>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td>
+                <button class="btn btn-success btn-end-turn">End Turn</button>
+              </td>
+            </tr>
+          </table>
+        </div>
+
+        <div class="col-md-7 colony-status">
+          <h2>Colony Status</h2>
+          <canvas id="base-canvas" width="500" height="400"></canvas>
+          <div class="info-balloon info-population">
+            <i class="fa fa-male"></i>
+            <br>
+            <span data-bind="text: population"></span>
+          </div>
+
+          <div class="info-balloon info-rations">
+            <i class="fa fa-cutlery"></i>
+            <br>
+            <span data-bind="text: storedResources.rations"></span>
+            <br>
+            <span data-bind="text: estimatedConsumption.rations"></span>
+          </div>
+
+          <div class="info-balloon info-energy">
+            <i class="fa fa-bolt"></i>
+            <br>
+            <span data-bind="text: storedResources.energy"></span>
+            <br>
+            <span data-bind="text: estimatedConsumption.energy"></span>
+          </div>
+
+          <div class="info-balloon info-soma">
+            <i class="fa fa-smile-o"></i>
+            <br>
+            <span data-bind="text: storedResources.soma"></span>
+            <br>
+            <span data-bind="text: estimatedConsumption.soma"></span>
+          </div>
+
+          <div class="info-balloon info-harvesters">
+            <i class="fa fa-truck"></i>
+            <br>
+            <span data-bind="text: storedResources.harvesters"></span>
+          </div>
+
+          <div class="info-balloon info-compound">
+            <i class="fa fa-cubes"></i>
+            <br>
+            <span data-bind="text: turnCompound"></span>
+          </div>
+        </div>
+
+        <div class="col-md-4">
+          <div class="row">
+            <div class="col-md-12">
+              <h2>Console</h2>
+            </div>
+            <textarea class="col-md-12 console well">Welcome!</textarea>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <audio class="audio-button-resource" src="audio/button-resource-4.wav"></audio>
+    <audio class="audio-button-confirm" src="audio/button-confirm.wav"></audio>
+
+    <div class="modal fade" id="modal-game-over">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal">
+              <span aria-hidden="true">&times;</span>
+              <span class="sr-only">Close</span>
+            </button>
+            <h4 class="modal-title">Game Over!</h4>
+          </div>
+          <div class="modal-body">
+            <p>You lose!</p>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">
+              Close
+            </button>
+            <button type="button" class="btn btn-primary btn-start-game">
+              Start New Game
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script src="js/jquery.js"></script>
+    <script src="js/underscore.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script src="js/knockout.js"></script>
+
+    <script src="js/game.js"></script>
+
+  </body>
+</html>

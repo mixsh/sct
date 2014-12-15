@@ -1,0 +1,82 @@
+
+body {
+    background-image: url('../images/bg2.png');
+    background-repeat: no-repeat;
+}
+
+h2 small {
+    display: block;
+}
+
+.btn {
+    outline: none !important;
+}
+
+.control-buttons-panel {
+    margin-bottom: 40px;
+}
+
+.console {
+    font-family: courier;
+    height: 240px;
+    overflow-y: scroll;
+    color: white;
+}
+
+.unselectable {
+  -moz-user-select: none;
+  -webkit-user-select: none;
+  -ms-user-select: none;
+}
+
+.music-player {
+    position: fixed;
+    bottom: 0;
+    right: 0;
+}
+
+.colony-status {
+    position: relative;
+}
+
+.info-balloon {
+    font-size: 1.25em;
+    text-align: center;
+    width: 70px;
+}
+
+.info-population {
+    position: absolute;
+    top: 210px;
+    left: 152px;
+}
+
+.info-rations {
+    position: absolute;
+    top: 75px;
+    left: 150px;
+}
+
+.info-energy {
+    position: absolute;
+    top: 316px;
+    left: 150px;
+}
+
+.info-soma {
+    position: absolute;
+    top: 194px;
+    left: 32px;
+}
+
+.info-compound {
+    position: absolute;
+    top: 207px;
+    left: 332px;
+}
+
+.info-harvesters {
+    position: absolute;
+    top: 210px;
+    left: 424px;
+}
